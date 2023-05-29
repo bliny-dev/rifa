@@ -1,0 +1,360 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %} bloco de link para css(caso tenha) {% endcomment %}
+{% block 'head' %}{% comment %} <link rel="stylesheet" href="{% static 'autenticacao/css/cadastro.css' %}"> {% endcomment %}{% endblock %}
+
+{% comment %} bloco de titulo da page {% endcomment %}
+{% block 'title' %}Gerir Rifa{% endblock %}
+
+{% comment %} Corpo da pagina em si  {% endcomment %}
+{% block 'body' %}
+
+    
+<section class="container">
+    <div class="row d-flex">
+        <div class="col-12 my-3">
+            <h3>Dashboard das rifas</h3>
+        </div>
+
+        <div class="col-12 d-flex justify-content-center p-2">
+            <button 
+                class="btn btn-sm btn-success m-1"
+                data-bs-toggle="modal"
+                href="#criar_rifa"
+                role="button"
+            >
+                Adicionar uma nova rifa +
+            </button>
+        </div>
+    </div>
+
+    {%  for sorteio in sorteios %}
+    <div class="row d-flex justify-content-center rounded-3 shadow p-2">
+
+        <div class="col-12 d-flex justify-content-center">
+            <h5 class="text-center py-1">{{ sorteio.nome }}</h5>
+            <button 
+                class="btn btn-sm btn-warning m-1 fw-bold"
+                data-bs-toggle="modal"
+                href="#editar_rifa"
+                role="button"
+            >
+                editar rifa
+            </button>
+        </div>
+
+        <div class="m-1 col-lg-5 col-md-12 col-sm-12 border border-2 border-primary rounded bg-white shadow">
+            <div>
+                <!-- organizador e n° do sorteio -->
+                <div class="d-flex justify-content-between align-items-center px-1">
+                    <div class="d-flex">
+                        <span class="m-1">Organização: {{sorteio.user}}</span>
+                    </div>
+                    <div>
+                        <h6>N°: {{sorteio.id}}</h6>
+                    </div>
+                </div>
+
+                <!-- img da rifa e lista de prêmios -->
+                <div class="d-flex justify-content-between align-items-center px-1">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <img class="border border-2 rounded border-dark p-5" src="" alt="">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-center">
+                            <button 
+                                class="btn btn-sm btn-success m-1"
+                                data-bs-toggle="modal"
+                                href="#criar_premios{{sorteio.id}}"
+                                role="button"
+                            >
+                                Adicionar prêmio +
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Valor da rifa -->
+                <div class="d-flex justify-content-center align-items-center">
+                    <h6 class="fw-bold">Valor da rifa: {{sorteio.preco}} R$</h6>
+                </div>
+
+                <!-- Adicionar promoções -->
+                <div class="d-flex justify-content-center align-items-center mt-2">
+                    <button 
+                        class="btn btn-sm btn-success m-1"
+                        data-bs-toggle="modal"
+                        href="#criar_promocao"
+                        role="button"
+                    >
+                        Adicionar promoções +
+                    </button>
+                </div>
+
+                <!-- Lista de promoções -->
+                <div class="">
+
+                    <div class="border border-2 border-primary rounded p-1 text-center">
+                        <div class="border-bottom border-2 border-primary">
+                            <span class="fw-bold">10 cotas = 04.00 R$</span> 
+                        </div>
+                        <div class="border-bottom border-2 border-primary">
+                            <span class="fw-bold">10 cotas = 04.00 R$</span> 
+                        </div> 
+                        <div class="border-bottom border-2 border-primary">
+                            <span class="fw-bold">10 cotas = 04.00 R$</span> 
+                        </div>
+                        <div class="border-bottom border-2 border-primary">
+                            <span class="fw-bold">10 cotas = 04.00 R$</span> 
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Data de sorteio e link de venda -->
+                <div class="d-flex justify-content-between align-items-center p-1 mt-2 border-top border-2 border-primary ">
+                    <div>
+                        <span>Data do sorteio: {{sorteio.data_sorteio}}</span>
+                    </div>
+                    <div>
+                        <a href="/comprarRifa.html" class="btn btn-sm btn-primary">
+                            Link de venda
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            
+        </div> 
+       
+        <!-- Descrição -->
+        <div class="col-lg-5 col-md-12 col-sm-12 mt-5 shadow rounded-3 py-2">
+            
+            <div class="text-center">
+                <h6>Prêmios deste sorteio</h6>
+                <div class="d-flex">
+                    <p class="btn btn-sm btn-warning fw-bold m-2">1° prêmio : 50 R$ para quem mais comprar cotas</p>
+                    <button class="btn btn-sm bg-danger m-1 ">e</button>
+                </div>
+                <div class="d-flex">
+                    <p class="btn btn-sm btn-warning fw-bold m-2">1° prêmio : 50 R$ para quem mais comprar cotas</p>
+                    <button class="btn btn-sm bg-danger m-1 ">e</button>
+                </div>
+            </div>
+
+            <div>
+                <div class="text-center">
+                    <h4>Descrição</h4>
+                </div>
+            </div>    
+            <div>    
+                <div class="text-center">
+                    <textarea class="form-control my-2" disabled>{{sorteio.descricao}}</textarea>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="row text-center mt-3">
+            <div>
+                <a href="/sorteio.html" class="btn btn btn-success">Sortear</a>
+            </div>
+        </div>
+    </div>
+
+        
+    <div class="modal fade  border border-2 border-danger" id="criar_premios{{sorteio.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"  aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Criando prêmios da rifa {{sorteio.id}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <form method="POST" action="{% url 'adiciona_premio' %}">
+                            {% csrf_token %}
+                            <div class="row d-flex">
+
+                                <div class="col-12">
+                                    <label for="" class="fw-bold">Nome do prêmio</label>
+                                    <input class="form-control" type="text" name="descricao_premio" id="descricao_premio">
+                                </div>
+                                <div class="col-12">
+                                    <label for="" class="fw-bold">numero do prêmio</label>
+                                    <input class="form-control" type="number" name="numero_premio" id="numero_premio">
+                                </div>
+                                <input type="hidden" name="sorteio_id" value="{{ sorteio.id }}">
+                                
+                                <div class="text-center mt-3">
+                                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {%   endfor  %}
+
+</section>
+
+
+<div class="modal fade  border border-2 border-danger" id="criar_rifa" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Criando rifa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="container">
+                <form method="POST" action="{% url 'gerir_sorteio' %}">
+                    {% csrf_token %}
+            
+                    <div class="row d-flex">
+                        <div class="col-12">
+                            <label for="nome" class="fw-bold">Nome da rifa</label>
+                            <input class="form-control" type="text" name="nome" id="nome">
+                        </div>
+                        <div class="col-6">
+                            <label for="qtd_bilhetes" class="fw-bold">Quantidade de bilhetes</label>
+                            <input class="form-control" type="text" name="qtd_bilhetes" id="qtd_bilhetes">
+                        </div>
+                        <div class="col-6">
+                            <label for="valor_unitario" class="fw-bold">Valor unitário</label>
+                            <input class="form-control" type="text" name="preco" id="preco">
+                        </div>
+                        <div class="col-12">
+                            <label for="data_sorteio" class="fw-bold">Data do sorteio</label>
+                            <input class="form-control" type="date" name="data_sorteio" id="data_sorteio">
+                        </div>
+                        <div class="col-12">
+                            <label for="descricao" class="fw-bold">Descrição da rifa</label>
+                            <textarea class="form-control" rows="2" name="descricao" id="descricao"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label for="foto" class="fw-bold">Adicionar foto</label>
+                            <input class="form-control" type="file" id="foto"  name="image_sorteio">
+                        </div>
+                        <div class="text-center mt-3">
+                            <input class="form-check-input" type="checkbox" value="True" id="status" name="status" checked>
+                            <label class="form-check-label" for="sorteio_ativo">
+                                Sorteio ativo
+                            </label>
+                        </div>
+                    </div>
+            
+                    <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+          
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success">Salvar</button>
+        </div>
+      </div>
+    </div>
+</div>
+  
+<div class="modal fade  border border-2 border-danger" id="editar_rifa" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Criando rifa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="container">
+
+                <div class="row d-flex">
+
+                    <div class="col-12">
+                        <label for="" class="fw-bold">Nome da rifa</label>
+                        <input class="form-control" type="text">
+                    </div>
+                    <div class="col-6">
+                        <label for="" class="fw-bold">quantidade de bilhetes</label>
+                        <input class="form-control" type="text">
+                    </div>
+                    <div class="col-6">                
+                        <label for="" class="fw-bold">Valor unitario</label>
+                        <input class="form-control" type="text">
+                    </div>
+                    <div class="col-12">
+                        <label for="" class="fw-bold">Data do sorteio</label>
+                        <input class="form-control" type="date">
+                    </div>
+                    <div class="col-12">
+                        <label for="" class="fw-bold">Descrição da rifa</label>
+                        <textarea class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label for="" class="fw-bold">Adicionar foto</label>
+                        <input class="form-control" type="file" id="exampleFileInput">
+                    </div>
+                    <div class="text-center mt-3">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                        <label class="form-check-label" for="flexCheckChecked">
+                            Sorteio ativo
+                        </label>
+                    </div>
+                
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success">Salvar</button>
+        </div>
+      </div>
+    </div>
+</div>
+   
+<div class="modal fade  border border-2 border-danger" id="criar_promocao" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Criando promocao da rifa (ID)</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="container">
+
+                <div class="row d-flex">
+
+                    <div class="col-12">
+                        <label for="" class="fw-bold">Quantidade de cotas</label>
+                        <input class="form-control" type="text">
+                    </div>
+                    <div class="col-12">
+                        <label for="" class="fw-bold">preço da promoção</label>
+                        <input class="form-control" type="number">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success">Salvar</button>
+        </div>
+      </div>
+    </div>
+</div>
+  
+    
+{% endblock %}
